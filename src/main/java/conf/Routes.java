@@ -18,6 +18,7 @@
 package conf;
 
 
+import controllers.ApplicationController;
 import controllers.RoomControllers;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
@@ -27,12 +28,15 @@ public class Routes implements ApplicationRoutes {
     @Override
     public void init(Router router) {
 
+        router.GET().route("/").with(ApplicationController::helloWorldJson);
+
         router.GET().route("/addRoom/{number}/{type}/{price}").with(RoomControllers::addRoom);
 
         router.POST().route("/addNewRoom").with(RoomControllers::addNewRoom);
 
         router.GET().route("/getRoom/{number}").with(RoomControllers::getRoom);
 
-        router.PUT().route("/updateRoom/{number}").with(RoomControllers::updateRoom);
+        router.DELETE().route("/deleteRoom/{number}").with(RoomControllers::deleteRoom);
+
     }
 }

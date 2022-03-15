@@ -14,8 +14,10 @@ import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
 import ninja.params.PathParam;
+import org.hibernate.annotations.NotFound;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public class RoomControllers {
@@ -60,8 +62,9 @@ public class RoomControllers {
         return Results.json().render(room);
     }
 
+
     @Transactional
-    public Result updateRoom(@PathParam("number") int number){
+    public Result deleteRoom(@PathParam("number") int number){
 
         EntityManager entityManager = entityManagerProvider.get();
 
@@ -69,8 +72,8 @@ public class RoomControllers {
 
         Rooms room = query.setParameter("number", number).getSingleResult();
 
-        entityManager.persist(room);
+        entityManager.remove(room);
 
-        return Results.json().render(room);
+        return Results.json().render("deletion successful");
     }
 }
