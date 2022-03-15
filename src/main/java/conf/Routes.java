@@ -36,6 +36,8 @@ public class Routes implements ApplicationRoutes {
 
         router.GET().route("/getRoom/{number}").with(RoomControllers::getRoom);
 
+        router.PUT().route("/updateRoom/{number}").with(RoomControllers::updateRoom);
+
         router.DELETE().route("/deleteRoom/{number}").with(RoomControllers::deleteRoom);
 
     }
