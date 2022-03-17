@@ -60,19 +60,26 @@ public class RoomControllers {
     }
 
     @Transactional
-    public Result updateRoom(@PathParam("number") int number, Rooms inputRoom) {
+    public Result updateRoom(@PathParam("number") int number, Rooms inputRoom) throws Exception {
 
-        EntityManager entityManager = entityManagerProvider.get();
+        try {
+            EntityManager entityManager = entityManagerProvider.get();
+            TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
-        TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
+            Rooms room = query.setParameter("number", number).getSingleResult();
 
-        Rooms room = query.setParameter("number", number).getSingleResult();
-        room.setPrice(inputRoom.getPrice());
-        room.setType(inputRoom.getType());
 
-        entityManager.persist(room);
+            room.setPrice(inputRoom.getPrice());
+            room.setType(inputRoom.getType());
 
-        return Results.json().render(room);
+
+            entityManager.persist(room);
+
+            return Results.json().render(room);
+        }
+        catch (Exception e){
+            return Results.json().render("No such room found");
+        }
     }
 
     @Transactional
