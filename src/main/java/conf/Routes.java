@@ -30,14 +30,19 @@ public class Routes implements ApplicationRoutes {
 
         router.GET().route("/").with(ApplicationController::helloWorldJson);
 
+        //for adding room using GET request
         router.GET().route("/addRoom/{number}/{type}/{price}").with(RoomControllers::addRoom);
 
+        //for adding room using POST request
         router.POST().route("/addNewRoom").with(RoomControllers::addNewRoom);
 
+        // for fetching room for the database
         router.GET().route("/getRoom/{number}").with(RoomControllers::getRoom);
 
+        // for updating room's data in the database
         router.PUT().route("/updateRoom/{number}").with(RoomControllers::updateRoom);
 
+        // for deleting the room's in the database
         router.DELETE().route("/deleteRoom/{number}").with(RoomControllers::deleteRoom);
 
     }
