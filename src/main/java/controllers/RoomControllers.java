@@ -47,16 +47,22 @@ public class RoomControllers {
     }
 
     @UnitOfWork
-    public Result getRoom(@PathParam("number") int number){
+    public Result getRoom(@PathParam("number") int number) throws Exception{
 
-        System.out.println("get room controller is running");
-        EntityManager entityManager = entityManagerProvider.get();
+        try {
 
-        TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
+            System.out.println("get room controller is running");
+            EntityManager entityManager = entityManagerProvider.get();
 
-        Rooms room = query.setParameter("number", number).getSingleResult();
+            TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
-        return Results.json().render(room);
+            Rooms room = query.setParameter("number", number).getSingleResult();
+
+            return Results.json().render(room);
+        }
+        catch (Exception e){
+            return Results.json().render("No such room found");
+        }
     }
 
     @Transactional
@@ -68,10 +74,13 @@ public class RoomControllers {
 
             Rooms room = query.setParameter("number", number).getSingleResult();
 
-
-            room.setPrice(inputRoom.getPrice());
-            room.setType(inputRoom.getType());
-
+            try {
+                room.setPrice(inputRoom.getPrice());
+                room.setType(inputRoom.getType());
+            }
+            catch (Exception e){
+                return Results.json().render("Can't update the room number.");
+            }
 
             entityManager.persist(room);
 
@@ -83,16 +92,21 @@ public class RoomControllers {
     }
 
     @Transactional
-    public Result deleteRoom(@PathParam("number") int number){
+    public Result deleteRoom(@PathParam("number") int number) throws Exception{
 
-        EntityManager entityManager = entityManagerProvider.get();
+        try {
+            EntityManager entityManager = entityManagerProvider.get();
 
-        TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
+            TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
-        Rooms room = query.setParameter("number", number).getSingleResult();
+            Rooms room = query.setParameter("number", number).getSingleResult();
 
-        entityManager.remove(room);
+            entityManager.remove(room);
 
-        return Results.json().render("deletion successful");
+            return Results.json().render("deletion successful");
+        }
+        catch (Exception e){
+            return Results.json().render("The room you are trying to delete, doesn't exist.");
+        }
     }
 }
