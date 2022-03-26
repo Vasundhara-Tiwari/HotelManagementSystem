@@ -73,14 +73,8 @@ public class RoomControllers {
             TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
             Rooms room = query.setParameter("number", number).getSingleResult();
-
-            try {
                 room.setPrice(inputRoom.getPrice());
                 room.setType(inputRoom.getType());
-            }
-            catch (Exception e){
-                return Results.json().render("Can't update the room number.");
-            }
 
             entityManager.persist(room);
 
