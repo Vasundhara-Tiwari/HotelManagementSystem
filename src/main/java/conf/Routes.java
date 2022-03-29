@@ -19,9 +19,12 @@ package conf;
 
 
 import controllers.ApplicationController;
+import controllers.GuestController;
 import controllers.RoomControllers;
+import controllers.LoginLogoutController;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
+
 
 public class Routes implements ApplicationRoutes {
 
@@ -45,5 +48,13 @@ public class Routes implements ApplicationRoutes {
         // for deleting the room's in the database
         router.DELETE().route("/deleteRoom/{number}").with(RoomControllers::deleteRoom);
 
+        // signup route
+        router.POST().route("/guest/signup").with(GuestController :: addGuest);
+
+        //login route
+        router.GET().route("/login").with(LoginLogoutController::loginPost);
+
+        //logout route
+        router.GET().route("/logout").with(LoginLogoutController::logout);
     }
 }
