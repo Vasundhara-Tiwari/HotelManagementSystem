@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Guest;
 import ninja.Context;
 import ninja.Result;
 import ninja.Results;
@@ -24,20 +25,15 @@ public class LoginLogoutController {
 
     }
 
-    public Result loginPost(@Param("username") String username,
-                            @Param("password") String password,
-                            @Param("rememberMe") Boolean rememberMe,
+    public Result loginPost(Guest guest1,
                             Context context) {
 
-        boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(username, password);
+        System.out.println(guest1.getEmail() + " " + guest1.getPassword());
+        boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
 
         if (isUserNameAndPasswordValid) {
             Session session = context.getSession();
-            session.put("username", username);
-
-            if (rememberMe != null && rememberMe) {
-                session.setExpiryTime(24 * 60 * 60 * 1000L);
-            }
+            session.put("email", guest1.getEmail());
 
             context.getFlashScope().success("login.loginSuccessful");
 
@@ -46,13 +42,22 @@ public class LoginLogoutController {
         } else {
 
             // something is wrong with the input or password not found.
-            context.getFlashScope().put("username", username);
-            context.getFlashScope().put("rememberMe", String.valueOf(rememberMe));
+            context.getFlashScope().put("email", guest1.getEmail());
             context.getFlashScope().error("login.errorLogin");
 
-            return Results.redirect("/login");
-
+            return Results.json().render("Error logging in");
         }
+    }
+
+    public Result logout(Context context) {
+
+        // remove any user dependent information
+        context.getSession().clear();
+        context.getFlashScope().success("login.logoutSuccessful");
+
+        System.out.println("Logout!!!");
+
+        return Results.redirect("/");
 
     }
 }
