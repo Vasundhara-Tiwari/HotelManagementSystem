@@ -4,7 +4,6 @@ import models.Guest;
 import ninja.Context;
 import ninja.Result;
 import ninja.Results;
-import ninja.params.Param;
 import ninja.session.Session;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
