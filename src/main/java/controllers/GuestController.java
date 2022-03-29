@@ -3,7 +3,11 @@ package controllers;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
+import com.google.inject.persist.Transactional;
 import models.Guest;
+import ninja.Result;
+import ninja.Results;
 import ninja.jpa.UnitOfWork;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -19,15 +23,26 @@ public class GuestController {
     @Inject
     Provider<EntityManager> entityManagerProvider;
 
-    @UnitOfWork
-    public boolean isUserAndPasswordValid(String username, String password) {
+    @Transactional
+    public Result addGuest(Guest guest) {
 
-        if (username != null && password != null) {
+        System.out.println("add guest controller using post request");
+
+        EntityManager entityManager = entityManagerProvider.get();
+
+        entityManager.persist(guest);
+        return Results.json().render("guest", guest);
+    }
+
+    @UnitOfWork
+    public boolean isUserAndPasswordValid(String email, String password) {
+
+        if (email != null && password != null) {
 
             EntityManager entityManager = entityManagerProvider.get();
 
-            TypedQuery<Guest> q = entityManager.createQuery("SELECT x FROM Guest x WHERE username = :usernameParam", Guest.class);
-            Guest guest = getSingleResult(q.setParameter("usernameParam", username));
+            TypedQuery<Guest> q = entityManager.createQuery("SELECT x FROM Guest x WHERE email = :emailParam", Guest.class);
+            Guest guest = getSingleResult(q.setParameter("emailParam", email));
             if (guest != null) {
                 if (guest.getPassword().equals(password)) {
                     return true;
