@@ -18,10 +18,7 @@
 package conf;
 
 
-import controllers.ApplicationController;
-import controllers.GuestController;
-import controllers.RoomControllers;
-import controllers.LoginLogoutController;
+import controllers.*;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
 
@@ -31,7 +28,11 @@ public class Routes implements ApplicationRoutes {
     @Override
     public void init(Router router) {
 
+        router.OPTIONS().route("/addNewRoom").with(CorsHeadersController.class, "routeForOptions");
+
         router.GET().route("/").with(ApplicationController::helloWorldJson);
+
+        router.GET().route("/getAllRooms").with(RoomControllers::getAllRooms);
 
         //for adding room using GET request
         router.GET().route("/addRoom/{number}/{type}/{price}").with(RoomControllers::addRoom);
