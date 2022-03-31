@@ -16,10 +16,14 @@ import ninja.jpa.UnitOfWork;
 import ninja.params.PathParam;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import java.util.List;
 
 public class RoomControllers {
     @Inject
     Provider<EntityManager> entityManagerProvider;
+
+    @Inject
+    CorsHeadersController cors;
 
     @Transactional
     public Result addRoom(@PathParam("number") int number, @PathParam("type") String type, @PathParam("price") int price) {
@@ -35,6 +39,7 @@ public class RoomControllers {
         return Results.json().render("room", room);
 
     }
+
     @Transactional
     public Result addNewRoom(Rooms room) {
 
@@ -43,7 +48,8 @@ public class RoomControllers {
         EntityManager entityManager = entityManagerProvider.get();
 
         entityManager.persist(room);
-        return Results.json().render("room", room);
+        System.out.println(room);
+        return cors.addHeaders(Results.json().render("room", room));
     }
 
     @UnitOfWork
@@ -58,10 +64,26 @@ public class RoomControllers {
 
             Rooms room = query.setParameter("number", number).getSingleResult();
 
-            return Results.json().render(room);
+            return cors.addHeaders(Results.json().render(room));
         }
         catch (Exception e){
             return Results.json().render("No such room found");
+        }
+    }
+
+    @UnitOfWork
+    public Result getAllRooms() throws Exception{
+
+        try {
+            EntityManager entityManager = entityManagerProvider.get();
+
+            TypedQuery<Rooms> q = entityManager.createQuery("select x from Rooms x order by x.number", Rooms.class);
+            List<Rooms> rooms = q.getResultList();
+
+            return cors.addHeaders(Results.json().render(rooms));
+        }
+        catch (Exception e){
+            return Results.json().render("No rooms present in the database.");
         }
     }
 
