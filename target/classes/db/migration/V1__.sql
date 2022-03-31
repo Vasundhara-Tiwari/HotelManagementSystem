@@ -8,6 +8,8 @@ create table Employee(
 create table Guest(
     id int8 not null,
     name varchar(20),
+    email varchar(50),
+    password varchar(10),
     primary key (id)
 );
 
