@@ -34,10 +34,6 @@ public class Routes implements ApplicationRoutes {
 
         router.GET().route("/getAllRooms").with(RoomControllers::getAllRooms);
 
-        //for adding room using GET request
-        router.GET().route("/addRoom/{number}/{type}/{price}").with(RoomControllers::addRoom);
-
-        //for adding room using POST request
         router.POST().route("/addNewRoom").with(RoomControllers::addNewRoom);
 
         // for fetching room for the database
