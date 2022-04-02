@@ -1,0 +1,1 @@
+alter table Rooms add column available boolean;
