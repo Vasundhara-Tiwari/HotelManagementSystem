@@ -26,17 +26,17 @@ public class RoomControllers {
     CorsHeadersController cors;
 
     @Transactional
-    public Result addRoom(@PathParam("number") int number, @PathParam("type") String type, @PathParam("price") int price) {
+    public Result addRoom(@PathParam("number") int number, @PathParam("type") String type, @PathParam("price") int price, @PathParam("available") boolean available) {
 
         System.out.println("add room controller using get request");
 
         EntityManager entityManager = entityManagerProvider.get();
 
-        Rooms room = new Rooms(number, type, price);
+        Rooms room = new Rooms(number, type, price, available);
 
         entityManager.persist(room);
 
-        return Results.json().render("room", room);
+        return cors.addHeaders(Results.json().render("room", room));
 
     }
 
@@ -48,7 +48,6 @@ public class RoomControllers {
         EntityManager entityManager = entityManagerProvider.get();
 
         entityManager.persist(room);
-        System.out.println(room);
         return cors.addHeaders(Results.json().render("room", room));
     }
 
@@ -67,7 +66,7 @@ public class RoomControllers {
             return cors.addHeaders(Results.json().render(room));
         }
         catch (Exception e){
-            return Results.json().render("No such room found");
+            return cors.addHeaders(Results.json().render("No such room found"));
         }
     }
 
@@ -83,12 +82,14 @@ public class RoomControllers {
             return cors.addHeaders(Results.json().render(rooms));
         }
         catch (Exception e){
-            return Results.json().render("No rooms present in the database.");
+            return cors.addHeaders(Results.json().render("No rooms present in the database."));
         }
     }
 
     @Transactional
     public Result updateRoom(@PathParam("number") int number, Rooms inputRoom) throws Exception {
+
+        System.out.println("update room is running");
 
         try {
             EntityManager entityManager = entityManagerProvider.get();
@@ -97,13 +98,14 @@ public class RoomControllers {
             Rooms room = query.setParameter("number", number).getSingleResult();
                 room.setPrice(inputRoom.getPrice());
                 room.setType(inputRoom.getType());
+                room.setAvailable(inputRoom.isAvailable());
 
             entityManager.persist(room);
 
-            return Results.json().render(room);
+            return cors.addHeaders(Results.json().render(room));
         }
         catch (Exception e){
-            return Results.json().render("No such room found");
+            return cors.addHeaders(Results.json().render("No such room found"));
         }
     }
 
@@ -119,10 +121,10 @@ public class RoomControllers {
 
             entityManager.remove(room);
 
-            return Results.json().render("deletion successful");
+            return cors.addHeaders(Results.json().render("deletion successful"));
         }
         catch (Exception e){
-            return Results.json().render("The room you are trying to delete, doesn't exist.");
+            return cors.addHeaders(Results.json().render("The room you are trying to delete, doesn't exist."));
         }
     }
 }

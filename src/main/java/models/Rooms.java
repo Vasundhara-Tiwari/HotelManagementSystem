@@ -15,14 +15,16 @@ public class Rooms {
     private int number;
     private String type;
     private int price;
+    private boolean available;
 
     public Rooms() {
     }
 
-    public Rooms(int number, String type, int price) {
+    public Rooms(int number, String type, int price, boolean available) {
         this.number = number;
         this.type = type;
         this.price = price;
+        this.available = available;
     }
 
     public int getNumber() {
@@ -47,5 +49,13 @@ public class Rooms {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }
