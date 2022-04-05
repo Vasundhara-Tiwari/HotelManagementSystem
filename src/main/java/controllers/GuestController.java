@@ -23,6 +23,9 @@ public class GuestController {
     @Inject
     Provider<EntityManager> entityManagerProvider;
 
+    @Inject
+    CorsHeadersController cors;
+
     @Transactional
     public Result addGuest(Guest guest) {
 
@@ -31,7 +34,7 @@ public class GuestController {
         EntityManager entityManager = entityManagerProvider.get();
 
         entityManager.persist(guest);
-        return Results.json().render("guest", guest);
+        return cors.addHeaders(Results.json().render("guest", guest));
     }
 
     @UnitOfWork
