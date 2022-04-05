@@ -18,7 +18,9 @@
 package conf;
 
 
+import com.google.inject.Inject;
 import controllers.*;
+import filters.SecureFilter;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
 
@@ -41,7 +43,7 @@ public class Routes implements ApplicationRoutes {
 
         router.GET().route("/getAllRooms").with(RoomControllers::getAllRooms);
 
-        router.POST().route("/addNewRoom").with(RoomControllers::addNewRoom);
+        router.POST().route("/addNewRoom").filters(SecureFilter.class).with(RoomControllers::addNewRoom);
 
         // for fetching room for the database
         router.GET().route("/getRoom/{number}").with(RoomControllers::getRoom);
