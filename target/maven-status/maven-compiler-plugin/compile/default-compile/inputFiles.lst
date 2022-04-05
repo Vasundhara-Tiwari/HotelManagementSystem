@@ -3,6 +3,7 @@ C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\conf\Module.java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\controllers\CorsHeadersController.java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\controllers\RoomControllers.java
+C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\filters\SecureFilter.java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\conf\Filters.java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\models\Rooms.java
 C:\Users\vasun\Documents\FullStack\MyAnatomy\HotelManagementSystem\src\main\java\controllers\LoginLogoutController.java

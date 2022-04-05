@@ -18,14 +18,16 @@ public class LoginLogoutController {
     @Inject
     GuestController guest;
 
+    @Inject
+    CorsHeadersController cors;
+
     public Result login(Context context) {
 
-        return Results.html();
+        return cors.addHeaders(Results.html());
 
     }
 
-    public Result loginPost(Guest guest1,
-                            Context context) {
+    public Result loginPost(Guest guest1, Context context) {
 
         System.out.println(guest1.getEmail() + " " + guest1.getPassword());
         boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
@@ -36,7 +38,7 @@ public class LoginLogoutController {
 
             context.getFlashScope().success("login.loginSuccessful");
 
-            return Results.redirect("/");
+            return cors.addHeaders(Results.json().render("Logged In"));
 
         } else {
 
@@ -44,9 +46,10 @@ public class LoginLogoutController {
             context.getFlashScope().put("email", guest1.getEmail());
             context.getFlashScope().error("login.errorLogin");
 
-            return Results.json().render("Error logging in");
+            return cors.addHeaders(Results.json().render("Error logging in"));
         }
     }
+
 
     public Result logout(Context context) {
 
@@ -56,7 +59,7 @@ public class LoginLogoutController {
 
         System.out.println("Logout!!!");
 
-        return Results.redirect("/");
+        return cors.addHeaders(Results.redirect("/"));
 
     }
 }
