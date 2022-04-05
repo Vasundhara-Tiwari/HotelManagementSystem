@@ -6,6 +6,7 @@ import javax.persistence.TypedQuery;
 
 import com.google.inject.persist.Transactional;
 import models.Guest;
+import ninja.Context;
 import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
@@ -54,6 +55,7 @@ public class GuestController {
         }
         return false;
     }
+
 
     private static <T> T getSingleResult(TypedQuery<T> query) {
         query.setMaxResults(1);

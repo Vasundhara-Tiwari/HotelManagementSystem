@@ -1,5 +1,6 @@
 conf\Filters.class
 controllers\ApplicationController.class
+filters\SecureFilter.class
 conf\Routes.class
 models\Guest.class
 models\Employee.class
