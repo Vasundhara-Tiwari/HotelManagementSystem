@@ -9,7 +9,9 @@ package controllers;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
+import filters.SecureFilter;
 import models.Rooms;
+import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
 import ninja.jpa.UnitOfWork;
@@ -40,6 +42,7 @@ public class RoomControllers {
 
     }
 
+    @FilterWith(SecureFilter.class)
     @Transactional
     public Result addNewRoom(Rooms room) {
 
@@ -86,6 +89,7 @@ public class RoomControllers {
         }
     }
 
+    @FilterWith(SecureFilter.class)
     @Transactional
     public Result updateRoom(@PathParam("number") int number, Rooms inputRoom) throws Exception {
 
@@ -108,6 +112,7 @@ public class RoomControllers {
             return cors.addHeaders(Results.json().render("No such room found"));
         }
     }
+
 
     @Transactional
     public Result deleteRoom(@PathParam("number") int number) throws Exception{
