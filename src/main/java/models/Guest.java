@@ -16,7 +16,7 @@ public class Guest {
     private String name;
     private String email;
     private String password;
-
+    
     public Guest() {
     }
 
