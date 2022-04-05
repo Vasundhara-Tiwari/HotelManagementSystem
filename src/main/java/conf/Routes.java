@@ -29,6 +29,13 @@ public class Routes implements ApplicationRoutes {
     public void init(Router router) {
 
         router.OPTIONS().route("/addNewRoom").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/guest/signup").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/getAllRooms").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/getRoom/{number}").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/updateRoom/{number}").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/deleteRoom/{number}").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/login").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/logout").with(CorsHeadersController.class, "routeForOptions");
 
         router.GET().route("/").with(ApplicationController::helloWorldJson);
 
@@ -49,7 +56,7 @@ public class Routes implements ApplicationRoutes {
         router.POST().route("/guest/signup").with(GuestController :: addGuest);
 
         //login route
-        router.GET().route("/login").with(LoginLogoutController::loginPost);
+        router.POST().route("/login").with(LoginLogoutController::loginPost);
 
         //logout route
         router.GET().route("/logout").with(LoginLogoutController::logout);

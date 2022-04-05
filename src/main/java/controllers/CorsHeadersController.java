@@ -17,7 +17,6 @@ public class CorsHeadersController {
     NinjaProperties ninjaProperties;
 
     public Result routeForOptions() {
-        System.out.println("------");
         return addHeaders(Results.ok().json().render("key", "value"));
     }
     public Result addHeaders(Result result) {
