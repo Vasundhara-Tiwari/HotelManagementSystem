@@ -27,39 +27,41 @@ public class LoginLogoutController {
 
     }
 
-    public Result loginPost(Guest guest1, Context context) {
+    public Result loginPost(Guest guest1, Session session) {
 
         System.out.println(guest1.getEmail() + " " + guest1.getPassword());
         boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
 
         if (isUserNameAndPasswordValid) {
-            Session session = context.getSession();
             session.put("email", guest1.getEmail());
-
-            context.getFlashScope().success("login.loginSuccessful");
-
+            System.out.println(session.get("email"));
+            //context.getFlashScope().success("login.loginSuccessful");
             return cors.addHeaders(Results.json().render("Logged In"));
 
         } else {
-
-            // something is wrong with the input or password not found.
-            context.getFlashScope().put("email", guest1.getEmail());
-            context.getFlashScope().error("login.errorLogin");
-
+            //context.getFlashScope().put("email", guest1.getEmail());
+            //context.getFlashScope().error("login.errorLogin");
             return cors.addHeaders(Results.json().render("Error logging in"));
         }
     }
 
+    public Result isLoggedIn(Session session){
+        if(session.get("email") != null){
+            System.out.println("is true");
+            return cors.addHeaders(Results.json().render(true));
+        }
+        else {
+            System.out.println("is false");
+            return cors.addHeaders(Results.json().render(false));
+        }
+    }
 
     public Result logout(Context context) {
 
         // remove any user dependent information
         context.getSession().clear();
-        context.getFlashScope().success("login.logoutSuccessful");
-
         System.out.println("Logout!!!");
-
-        return cors.addHeaders(Results.redirect("/"));
+        return cors.addHeaders(Results.json().render("Logged Out"));
 
     }
 }
