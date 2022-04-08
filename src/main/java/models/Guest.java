@@ -16,15 +16,19 @@ public class Guest {
     private String name;
     private String email;
     private String password;
+    private String address;
+    private boolean admin;
     
     public Guest() {
     }
 
-    public Guest(int id, String name, String email, String password) {
+    public Guest(int id, String name, String email, String password, String address) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.address = address;
+        this.admin = false;
     }
 
     public int getId() {
@@ -57,5 +61,21 @@ public class Guest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }
