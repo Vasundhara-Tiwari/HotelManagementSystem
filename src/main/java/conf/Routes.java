@@ -18,7 +18,6 @@
 package conf;
 
 
-import com.google.inject.Inject;
 import controllers.*;
 import filters.SecureFilter;
 import ninja.Router;
@@ -29,7 +28,6 @@ public class Routes implements ApplicationRoutes {
 
     @Override
     public void init(Router router) {
-
         router.OPTIONS().route("/addNewRoom").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/guest/signup").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/getAllRooms").with(CorsHeadersController.class, "routeForOptions");
@@ -38,21 +36,28 @@ public class Routes implements ApplicationRoutes {
         router.OPTIONS().route("/deleteRoom/{number}").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/login").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/logout").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/bookRoom").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/isLoggedIn").with(CorsHeadersController.class, "routeForOptions");
 
         router.GET().route("/").with(ApplicationController::helloWorldJson);
 
         router.GET().route("/getAllRooms").with(RoomControllers::getAllRooms);
+
+        router.GET().route("/isLoggedIn").with(LoginLogoutController::isLoggedIn);
 
         router.POST().route("/addNewRoom").filters(SecureFilter.class).with(RoomControllers::addNewRoom);
 
         // for fetching room for the database
         router.GET().route("/getRoom/{number}").with(RoomControllers::getRoom);
 
+        //for booking room
+        router.POST().route("/bookRoom").filters(SecureFilter.class).with(RoomControllers::bookRoom);
+
         // for updating room's data in the database
-        router.PUT().route("/updateRoom/{number}").with(RoomControllers::updateRoom);
+        router.PUT().route("/updateRoom/{number}").filters(SecureFilter.class).with(RoomControllers::updateRoom);
 
         // for deleting the room's in the database
-        router.DELETE().route("/deleteRoom/{number}").with(RoomControllers::deleteRoom);
+        router.DELETE().route("/deleteRoom/{number}").filters(SecureFilter.class).with(RoomControllers::deleteRoom);
 
         // signup route
         router.POST().route("/guest/signup").with(GuestController :: addGuest);
