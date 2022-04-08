@@ -12,6 +12,7 @@ import ninja.Results;
 import ninja.jpa.UnitOfWork;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import ninja.params.PathParam;
 
 /**
  * Created by Vasundhara Tiwari
@@ -28,14 +29,19 @@ public class GuestController {
     CorsHeadersController cors;
 
     @Transactional
-    public Result addGuest(Guest guest) {
+    public Result addGuest(Guest guest) throws Exception {
 
-        System.out.println("add guest controller using post request");
+        try {
+            System.out.println("add guest controller using post request");
 
-        EntityManager entityManager = entityManagerProvider.get();
+            EntityManager entityManager = entityManagerProvider.get();
 
-        entityManager.persist(guest);
-        return cors.addHeaders(Results.json().render("guest", guest));
+            entityManager.persist(guest);
+            return cors.addHeaders(Results.json().render("guest", guest));
+        }
+        catch (Exception e) {
+            return cors.addHeaders(Results.json().render("User already exists"));
+        }
     }
 
     @UnitOfWork
