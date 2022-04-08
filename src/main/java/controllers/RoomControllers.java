@@ -11,6 +11,7 @@ import com.google.inject.Provider;
 import com.google.inject.persist.Transactional;
 import filters.SecureFilter;
 import models.Rooms;
+import ninja.Context;
 import ninja.FilterWith;
 import ninja.Result;
 import ninja.Results;
@@ -42,16 +43,17 @@ public class RoomControllers {
 
     }
 
-    @FilterWith(SecureFilter.class)
     @Transactional
-    public Result addNewRoom(Rooms room) {
+    @FilterWith(SecureFilter.class)
+    public Result addNewRoom(Rooms room, Context context){
 
-        System.out.println("add room controller using post request");
+            System.out.println("add room controller using post request");
 
-        EntityManager entityManager = entityManagerProvider.get();
+            EntityManager entityManager = entityManagerProvider.get();
 
-        entityManager.persist(room);
-        return cors.addHeaders(Results.json().render("room", room));
+            entityManager.persist(room);
+            return cors.addHeaders(Results.json().render("room", room));
+
     }
 
     @UnitOfWork
@@ -87,6 +89,22 @@ public class RoomControllers {
         catch (Exception e){
             return cors.addHeaders(Results.json().render("No rooms present in the database."));
         }
+    }
+
+    @Transactional
+    public Result bookRoom(int number) {
+
+        EntityManager entityManager = entityManagerProvider.get();
+        TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
+
+        Rooms returnedRoom = query.setParameter("number", number).getSingleResult();
+
+        if(!returnedRoom.isAvailable()){
+            returnedRoom.setAvailable(true);
+            entityManager.persist(returnedRoom);
+            return cors.addHeaders(Results.json().render("Booked"));
+        }
+        return cors.addHeaders(Results.json().render("can't book"));
     }
 
     @FilterWith(SecureFilter.class)
