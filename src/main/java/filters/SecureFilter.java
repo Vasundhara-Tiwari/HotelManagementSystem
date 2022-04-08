@@ -12,14 +12,15 @@ public class SecureFilter implements Filter {
     @Override
     public Result filter(FilterChain chain, Context context) {
 
+        System.out.println(context.getSession().get("email"));
         // if we got no cookies we break:
-        if (context.getSession() == null) {
-
+        if (context.getSession().get("email") == null) {
+            System.out.println("Filters class if");
             return Results.redirect("/");
 
-        } else {
+        } else{
+            System.out.println("Filters class else");
             return chain.next(context);
         }
-
     }
 }
