@@ -1,0 +1,1 @@
+alter table Guest add column isAdmin boolean;

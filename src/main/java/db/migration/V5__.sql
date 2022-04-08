@@ -1,0 +1,1 @@
+alter table Guest drop column role;
