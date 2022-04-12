@@ -19,6 +19,7 @@ package conf;
 
 
 import controllers.*;
+import filters.AdminFilter;
 import filters.SecureFilter;
 import ninja.Router;
 import ninja.application.ApplicationRoutes;
@@ -38,12 +39,24 @@ public class Routes implements ApplicationRoutes {
         router.OPTIONS().route("/logout").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/bookRoom").with(CorsHeadersController.class, "routeForOptions");
         router.OPTIONS().route("/isLoggedIn").with(CorsHeadersController.class, "routeForOptions");
+        router.OPTIONS().route("/isAdmin").with(CorsHeadersController.class, "routeForOptions");
+        ///////////
+        router.OPTIONS().route("/getBookings").with(CorsHeadersController.class, "routeForOptions");
+        ////////////
+        router.OPTIONS().route("/addBooking").with(CorsHeadersController.class, "routeForOptions");
 
         router.GET().route("/").with(ApplicationController::helloWorldJson);
 
+        /////////////
+        router.GET().route("/getBookings").with(AdminControllers::getBookingDetails);
+        /////////////
+
         router.GET().route("/getAllRooms").with(RoomControllers::getAllRooms);
+        router.POST().route("/addBooking").with(GuestController::addBooking);
 
         router.GET().route("/isLoggedIn").with(LoginLogoutController::isLoggedIn);
+
+        router.GET().route("/isAdmin").with(LoginLogoutController::isAdmin);
 
         router.POST().route("/addNewRoom").filters(SecureFilter.class).with(RoomControllers::addNewRoom);
 
