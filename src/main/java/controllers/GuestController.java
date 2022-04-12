@@ -1,11 +1,14 @@
 package controllers;
 
+import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import com.google.inject.persist.Transactional;
+import models.BookingDetails;
 import models.Guest;
+import models.Rooms;
 import ninja.Context;
 import ninja.Result;
 import ninja.Results;
@@ -62,6 +65,20 @@ public class GuestController {
         return false;
     }
 
+    @Transactional
+    public Result addBooking(BookingDetails bookingDetails) throws Exception{
+
+        try {
+            System.out.println("add");
+            EntityManager entityManager = entityManagerProvider.get();
+            entityManager.persist(bookingDetails);
+            return cors.addHeaders(Results.json().render("detail", bookingDetails));
+        }
+        catch (Exception e){
+            System.out.println(e);
+            return cors.addHeaders(Results.json().render(e));
+        }
+    }
 
     private static <T> T getSingleResult(TypedQuery<T> query) {
         query.setMaxResults(1);
