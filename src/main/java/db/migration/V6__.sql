@@ -1,0 +1,1 @@
+alter table Guest rename column isAdmin to admin;
