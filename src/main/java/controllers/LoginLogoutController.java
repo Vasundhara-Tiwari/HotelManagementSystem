@@ -1,12 +1,18 @@
 package controllers;
 
+import com.google.inject.Provider;
 import models.Guest;
 import ninja.Context;
 import ninja.Result;
 import ninja.Results;
+import ninja.params.PathParam;
 import ninja.session.Session;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 /**
  * Created by Vasundhara Tiwari
@@ -21,27 +27,53 @@ public class LoginLogoutController {
     @Inject
     CorsHeadersController cors;
 
+    @Inject
+    Provider<EntityManager> entityManagerProvider;
+
     public Result login(Context context) {
 
         return cors.addHeaders(Results.html());
 
     }
 
-    public Result loginPost(Guest guest1, Session session) {
+    public Result loginPost(Guest guest1, Session session) throws Exception{
 
-        System.out.println(guest1.getEmail() + " " + guest1.getPassword());
-        boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
+        try {
+            System.out.println(guest1.getEmail() + " " + guest1.getPassword());
+            boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
 
-        if (isUserNameAndPasswordValid) {
-            session.put("email", guest1.getEmail());
-            System.out.println(session.get("email"));
-            //context.getFlashScope().success("login.loginSuccessful");
-            return cors.addHeaders(Results.json().render("Logged In"));
+            if (isUserNameAndPasswordValid) {
+                session.put("email", guest1.getEmail());
+                System.out.println(session.get("email"));
+                return cors.addHeaders(Results.json().render("Logged In"));
 
-        } else {
-            //context.getFlashScope().put("email", guest1.getEmail());
-            //context.getFlashScope().error("login.errorLogin");
-            return cors.addHeaders(Results.json().render("Error logging in"));
+            } else {
+                return cors.addHeaders(Results.json().render("Error logging in"));
+            }
+        }
+        catch (Exception e){
+            return cors.addHeaders(Results.json().render(e));
+        }
+    }
+
+    public Result isAdmin(Session session) throws Exception{
+        try {
+            EntityManager entityManager = entityManagerProvider.get();
+
+            String email = session.get("email");
+            System.out.println(email);
+            TypedQuery<Guest> q = entityManager.createQuery("SELECT x FROM Guest x WHERE email = :emailParam", Guest.class);
+            Guest guest = getSingleResult(q.setParameter("emailParam", email));
+            System.out.println(guest.isAdmin());
+            if (guest.isAdmin()) {
+                return cors.addHeaders(Results.json().render(true));
+            } else {
+                return cors.addHeaders(Results.json().render(false));
+            }
+        }
+        catch (Exception e){
+            System.out.println("Can't resolve" + e);
+            return cors.addHeaders(Results.json().render(false));
         }
     }
 
@@ -63,5 +95,14 @@ public class LoginLogoutController {
         System.out.println("Logout!!!");
         return cors.addHeaders(Results.json().render("Logged Out"));
 
+    }
+    private static <T> T getSingleResult(TypedQuery<T> query) {
+        query.setMaxResults(1);
+        List<T> list = query.getResultList();
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+
+        return list.get(0);
     }
 }
