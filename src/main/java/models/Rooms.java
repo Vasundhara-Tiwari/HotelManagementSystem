@@ -24,7 +24,7 @@ public class Rooms {
         this.number = number;
         this.type = type;
         this.price = price;
-        this.available = available;
+        this.available = true;
     }
 
     public int getNumber() {
