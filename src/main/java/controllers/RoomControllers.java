@@ -75,7 +75,6 @@ public class RoomControllers {
         }
     }
 
-    @UnitOfWork
     public Result getAllRooms() throws Exception{
 
         try {
@@ -112,6 +111,7 @@ public class RoomControllers {
     public Result updateRoom(@PathParam("number") int number, Rooms inputRoom) throws Exception {
 
         System.out.println("update room is running");
+        System.out.println(inputRoom.getNumber()+"---"+inputRoom.getPrice()+ "----"+inputRoom.getPrice());
 
         try {
             EntityManager entityManager = entityManagerProvider.get();
