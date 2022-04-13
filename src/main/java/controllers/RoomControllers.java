@@ -29,21 +29,6 @@ public class RoomControllers {
     CorsHeadersController cors;
 
     @Transactional
-    public Result addRoom(@PathParam("number") int number, @PathParam("type") String type, @PathParam("price") int price, @PathParam("available") boolean available) {
-
-        System.out.println("add room controller using get request");
-
-        EntityManager entityManager = entityManagerProvider.get();
-
-        Rooms room = new Rooms(number, type, price, available);
-
-        entityManager.persist(room);
-
-        return cors.addHeaders(Results.json().render("room", room));
-
-    }
-
-    @Transactional
     @FilterWith(SecureFilter.class)
     public Result addNewRoom(Rooms room, Context context){
 
@@ -92,18 +77,22 @@ public class RoomControllers {
 
     @Transactional
     public Result bookRoom(int number) {
+        try {
+            EntityManager entityManager = entityManagerProvider.get();
+            TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
-        EntityManager entityManager = entityManagerProvider.get();
-        TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
+            Rooms returnedRoom = query.setParameter("number", number).getSingleResult();
 
-        Rooms returnedRoom = query.setParameter("number", number).getSingleResult();
-
-        if(!returnedRoom.isAvailable()){
-            returnedRoom.setAvailable(true);
-            entityManager.persist(returnedRoom);
-            return cors.addHeaders(Results.json().render("Booked"));
+            if (!returnedRoom.isAvailable()) {
+                returnedRoom.setAvailable(true);
+                entityManager.persist(returnedRoom);
+                return cors.addHeaders(Results.json().render("Booked"));
+            }
+            return cors.addHeaders(Results.json().render("can't book"));
         }
-        return cors.addHeaders(Results.json().render("can't book"));
+        catch (Exception e){
+            return cors.addHeaders(Results.json().render("Can't book"));
+        }
     }
 
     @FilterWith(SecureFilter.class)
