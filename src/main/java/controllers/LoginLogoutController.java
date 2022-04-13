@@ -37,7 +37,6 @@ public class LoginLogoutController {
     }
 
     public Result loginPost(Guest guest1, Session session) throws Exception{
-
         try {
             System.out.println(guest1.getEmail() + " " + guest1.getPassword());
             boolean isUserNameAndPasswordValid = guest.isUserAndPasswordValid(guest1.getEmail(), guest1.getPassword());
@@ -56,10 +55,9 @@ public class LoginLogoutController {
         }
     }
 
-    public Result isAdmin(Session session) throws Exception{
+    public Result isAdmin(Session session){
         try {
             EntityManager entityManager = entityManagerProvider.get();
-
             String email = session.get("email");
             System.out.println(email);
             TypedQuery<Guest> q = entityManager.createQuery("SELECT x FROM Guest x WHERE email = :emailParam", Guest.class);
@@ -72,18 +70,19 @@ public class LoginLogoutController {
             }
         }
         catch (Exception e){
-            System.out.println("Can't resolve" + e);
+            System.out.println("Can't resolve " + e);
             return cors.addHeaders(Results.json().render(false));
         }
     }
 
     public Result isLoggedIn(Session session){
+        System.out.println(session.get("email"));
         if(session.get("email") != null){
-            System.out.println("is true");
+            System.out.println("login is true");
             return cors.addHeaders(Results.json().render(true));
         }
         else {
-            System.out.println("is false");
+            System.out.println("login is false");
             return cors.addHeaders(Results.json().render(false));
         }
     }
