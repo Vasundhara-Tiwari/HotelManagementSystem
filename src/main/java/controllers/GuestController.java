@@ -47,7 +47,6 @@ public class GuestController {
         }
     }
 
-    @UnitOfWork
     public boolean isUserAndPasswordValid(String email, String password) {
 
         if (email != null && password != null) {
