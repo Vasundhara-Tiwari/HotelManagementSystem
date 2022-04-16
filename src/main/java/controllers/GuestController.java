@@ -1,21 +1,15 @@
 package controllers;
 
-import java.util.Date;
+
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
-
 import com.google.inject.persist.Transactional;
 import models.BookingDetails;
 import models.Guest;
-import models.Rooms;
-import ninja.Context;
-import ninja.Result;
-import ninja.Results;
-import ninja.jpa.UnitOfWork;
+import ninja.*;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import ninja.params.PathParam;
 
 /**
  * Created by Vasundhara Tiwari
@@ -65,8 +59,8 @@ public class GuestController {
     }
 
     @Transactional
-    public Result addBooking(BookingDetails bookingDetails) throws Exception{
-
+    public Result addBooking(BookingDetails bookingDetails){
+        System.out.println(bookingDetails.getBookingDate());
         try {
             System.out.println("add");
             EntityManager entityManager = entityManagerProvider.get();
