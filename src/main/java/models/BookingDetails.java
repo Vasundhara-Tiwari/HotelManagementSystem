@@ -12,6 +12,8 @@ import java.util.Date;
 public class BookingDetails {
 
     @Id
+    private long bookingDate;
+    private int number;
     private String email;
     private String name;
     private String checkInDate;
@@ -20,11 +22,13 @@ public class BookingDetails {
     public BookingDetails() {
     }
 
-    public BookingDetails(String email, String name, String checkInDate, String checkOutDate) {
+    public BookingDetails(int number, String name, String email, String checkInDate, String checkOutDate) {
+        this.number = number;
         this.email = email;
         this.name = name;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
+        this.bookingDate = System.currentTimeMillis();
     }
 
     public String getEmail() {
@@ -57,5 +61,21 @@ public class BookingDetails {
 
     public void setCheckOutDate(String checkOutDate) {
         this.checkOutDate = checkOutDate;
+    }
+
+    public long getBookingDate() {
+        return bookingDate;
+    }
+
+    public void setBookingDate(long bookingDate) {
+        this.bookingDate = bookingDate;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }
