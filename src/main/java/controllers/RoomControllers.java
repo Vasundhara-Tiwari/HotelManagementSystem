@@ -77,14 +77,15 @@ public class RoomControllers {
 
     @Transactional
     public Result bookRoom(int number) {
+        System.out.println(number);
         try {
             EntityManager entityManager = entityManagerProvider.get();
             TypedQuery<Rooms> query = entityManager.createQuery("SELECT x from Rooms x where x.number = :number", Rooms.class);
 
             Rooms returnedRoom = query.setParameter("number", number).getSingleResult();
 
-            if (!returnedRoom.isAvailable()) {
-                returnedRoom.setAvailable(true);
+            if (returnedRoom.isAvailable()) {
+                returnedRoom.setAvailable(false);
                 entityManager.persist(returnedRoom);
                 return cors.addHeaders(Results.json().render("Booked"));
             }
